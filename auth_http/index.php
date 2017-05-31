@@ -80,14 +80,14 @@ if (!empty($config['redis_auth'])) $redis->auth($config['redis_auth']);
 /* 检查IP是否位于黑名单内 */
 if (is_blackip($clientip))
 {
-    error("Authenticaltion fail", "536");
+    error("Authentication fail", "536");
 }
 
 /* 检查用户是否位于不可登录名单内 */
 if (in_array($username, $config['block_users_list']))
 {
     block_ip($clientip, $config['block_users_forbid_time']);
-    error("Authenticaltion fail", "537");
+    error("Authentication fail", "537");
 }
 
 
@@ -98,12 +98,12 @@ if ($user_login_count >= $config["login_limit_on_single_user_threshold"])
 {
     /* 某一IP持续对一个用户进行爆破的时候，封禁用户同时，同样需要封禁这个IP */
     block_ip($clientip, $config['block_users_forbid_time']);
-    error("Authenticaltion fail", "530");
+    error("Authentication fail", "530");
 }
 if ($ip_login_count >= $config["login_limit_threshold"])
 {
     block_ip($clientip, $config['block_users_forbid_time']);
-    error("Authenticaltion fail", "531");
+    error("Authentication fail", "531");
 }
 
 
@@ -149,7 +149,7 @@ if ($config['login_with_totp'])
             ($ip_login_count <= 1) ? $redis->setex("IP_LOGIN_".$clientip, (int)$config['login_speed_threshold'], $ip_login_count) : $redis->set("IP_LOGIN_".$clientip, $ip_login_count);
             ($user_login_count <= 1) ? $redis->setex("USER_LOGIN_".strtolower($username), (int)$config['login_forbid_on_single_user_time'], $user_login_count) : $redis->set("USER_LOGIN_".strtolower($username), $user_login_count);
             
-            error("Authenticaltion fail", "538");
+            error("Authentication fail", "538");
         }
         
         $totpcode = substr($password, $code_start + 1, strlen($password) - $code_start);
@@ -163,7 +163,7 @@ if ($config['login_with_totp'])
             ($ip_login_count <= 1) ? $redis->setex("IP_LOGIN_".$clientip, (int)$config['login_speed_threshold'], $ip_login_count) : $redis->set("IP_LOGIN_".$clientip, $ip_login_count);
             ($user_login_count <= 1) ? $redis->setex("USER_LOGIN_".strtolower($username), (int)$config['login_forbid_on_single_user_time'], $user_login_count) : $redis->set("USER_LOGIN_".strtolower($username), $user_login_count);
             
-            error("Authenticaltion fail", "538");
+            error("Authentication fail", "538");
         }
     }
 }
@@ -177,7 +177,7 @@ if (!ldap_login($username, $password))
     ($ip_login_count <= 1) ? $redis->setex("IP_LOGIN_".$clientip, (int)$config['login_speed_threshold'], $ip_login_count) : $redis->set("IP_LOGIN_".$clientip, $ip_login_count);
     ($user_login_count <= 1) ? $redis->setex("USER_LOGIN_".strtolower($username), (int)$config['login_forbid_on_single_user_time'], $user_login_count) : $redis->set("USER_LOGIN_".strtolower($username), $user_login_count);
     
-    error("Authenticaltion fail", "539");
+    error("Authentication fail", "539");
 }
 
 /* 登录成功，则删除登录计数 */
