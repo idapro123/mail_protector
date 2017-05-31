@@ -920,7 +920,7 @@ ngx_mail_proxy_read_response(ngx_mail_session_t *s, ngx_uint_t state)
         case ngx_smtp_helo_from:
         case ngx_smtp_from:
         
-            if (p[0] == '5' && p[1] == '3' && p[2] == '5') {  /* 535 = Authenticaltion fail */
+            if (p[0] == '5' && p[1] == '3' && p[2] == '5') {  /* 535 = Authentication fail */
                 break;
             }
             
